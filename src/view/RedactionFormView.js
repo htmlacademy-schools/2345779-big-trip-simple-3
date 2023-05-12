@@ -1,12 +1,26 @@
 import { createElement } from '../render';
+import { getArrayFromType, getOfferName, getOfferPrice } from '../mocks/const.js';
 
-const createEditMenu = () => (
-  `<form class="event event--edit" action="#" method="post">
+const createOfferTemplate = (offerIds, type) => getArrayFromType(type).map((offer) => {
+  const ifChecked = offerIds.includes(offer) ? 'checked' : '';
+  return `<div class="event__offer-selector">
+    <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" ${ifChecked}>
+    <label class="event__offer-label" for="event-offer-luggage-1">
+      <span class="event__offer-title">${getOfferName(offer)}</span>
+      &plus;&euro;&nbsp;
+      <span class="event__offer-price">${getOfferPrice(offer)}</span>
+    </label>
+  </div>`;}).join('');
+
+
+const createEditMenu = (point) => {
+  const {type, destination, dateFrom, dateTo, price, offers} = point;
+  return `<form class="event event--edit" action="#" method="post">
 	<header class="event__header">
 	  <div class="event__type-wrapper">
 		<label class="event__type  event__type-btn" for="event-type-toggle-1">
 		  <span class="visually-hidden">Choose event type</span>
-		  <img class="event__type-icon" width="17" height="17" src="img/icons/taxi.png" alt="Event type icon">
+		  <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="${type} icon">
 		</label>
 		<input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 		<div class="event__type-list">
@@ -55,26 +69,32 @@ const createEditMenu = () => (
 		<label class="event__label  event__type-output" for="event-destination-1">
 
 		</label>
-		<input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="" list="destination-list-1">
+		<input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1">
 		<datalist id="destination-list-1">
-		  <option value="Amsterdam"></option>
-		  <option value="Geneva"></option>
-		  <option value="Chamonix"></option>
+		  <option value="Paris"></option>
+		  <option value="Chicago"></option>
+		  <option value="Moscow"></option>
+      <option value="Berlin"></option>
+      <option value="Tokyo"></option>
+      <option value="Bogota"></option>
+      <option value="Rome"></option>
+      <option value="Warsaw"></option>
+      <option value="London"></option>
 		</datalist>
 	  </div>
 	  <div class="event__field-group  event__field-group--time">
 		<label class="visually-hidden" for="event-start-time-1">From</label>
-		<input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="18/03/19 12:25">
+		<input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${dateFrom.format('YYYY-MM-DD HH:mm')}">
 		&mdash;
 		<label class="visually-hidden" for="event-end-time-1">To</label>
-		<input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="18/03/19 13:35">
+		<input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${dateTo.format('YYYY-MM-DD HH:mm')}">
 	  </div>
 	  <div class="event__field-group  event__field-group--price">
 		<label class="event__label" for="event-price-1">
 		  <span class="visually-hidden">Price</span>
 		  &euro;
 		</label>
-		<input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="">
+		<input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
 	  </div>
 	  <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
 	  <button class="event__reset-btn" type="reset">Delete</button>
@@ -85,20 +105,31 @@ const createEditMenu = () => (
 	<section class="event__details">
 	  <section class="event__section  event__section--offers">
 		<h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
+    <div class="event_-available-offers">
+      ${createOfferTemplate(offers, type)}
+    </div>
 	  </section>
 	  <section class="event__section  event__section--destination">
 		<h3 class="event__section-title  event__section-title--destination">Destination</h3>
-		<p class="event__destination-description"></p>
+		<p class="event__destination-description">${destination.description}</p>
+    <div class="event__photos-container">
+      <div class="event__photos-tape">
+        <img class="event__photo" src="${destination.photo}" alt="Event photo">
+      </div>
+    </div>
 	  </section>
 	</section>
-  </form>`
-);
+  </form>`;
+};
 
 export default class RedactionView {
 
+  constructor(point) {
+    this.point = point;
+  }
+
   getTemplate() {
-    return createEditMenu();
+    return createEditMenu(this.point);
   }
 
   getElement() {
