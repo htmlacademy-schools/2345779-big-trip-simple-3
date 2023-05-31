@@ -1,6 +1,7 @@
 import { createElement } from '../render.js';
-
-import { getArrayFromType, getOfferName, getOfferPrice } from '../mocks/const.js';
+import { getArrayFromType, getOfferName, getOfferPrice, CITIES } from '../mocks/const.js';
+import { fullDate } from '../dateApi.js';
+import { getDestById } from '../mocks/mock.js';
 
 const createOfferTemplate = (offerIds, type) => getArrayFromType(type).map((offer) => {
   const ifChecked = offerIds.includes(offer) ? 'checked' : '';
@@ -13,15 +14,23 @@ const createOfferTemplate = (offerIds, type) => getArrayFromType(type).map((offe
     </label>
   </div>`;}).join('');
 
+const createPhotosTemplate = (destination) => destination.pictures.map((pic) =>
+  `<img class="event__photo" src="${pic.src}" alt="Event photo"></img>`
+).join('');
+
+const createCitiesListTemplate = (cities) => cities.map((city) =>
+  `<option value=${city}></option>`
+).join('');
+
 
 const createPointMenu = (point) => {
-  const {type, destination, dateFrom, dateTo, price, offers} = point;
+  const destination = getDestById(point.destination);
   return `<form class="event event--edit" action="#" method="post">
 	<header class="event__header">
 	  <div class="event__type-wrapper">
 		<label class="event__type  event__type-btn" for="event-type-toggle-1">
 		  <span class="visually-hidden">Choose event type</span>
-		  <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="${type} icon">
+		  <img class="event__type-icon" width="17" height="17" src="img/icons/${point.type}.png" alt="${point.type} icon">
 		</label>
 		<input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 		<div class="event__type-list">
@@ -72,30 +81,22 @@ const createPointMenu = (point) => {
 		</label>
 		<input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1">
 		<datalist id="destination-list-1">
-		  <option value="Paris"></option>
-		  <option value="Chicago"></option>
-		  <option value="Moscow"></option>
-      <option value="Berlin"></option>
-      <option value="Tokyo"></option>
-      <option value="Bogota"></option>
-      <option value="Rome"></option>
-      <option value="Warsaw"></option>
-      <option value="London"></option>
+		  ${createCitiesListTemplate(CITIES)}
 		</datalist>
 	  </div>
 	  <div class="event__field-group  event__field-group--time">
 		<label class="visually-hidden" for="event-start-time-1">From</label>
-		<input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${dateFrom.format('YYYY-MM-DD HH:mm')}">
+		<input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${fullDate(point.dateFrom)}">
 		&mdash;
 		<label class="visually-hidden" for="event-end-time-1">To</label>
-		<input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${dateTo.format('YYYY-MM-DD HH:mm')}">
+		<input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${fullDate(point.dateTo)}">
 	  </div>
 	  <div class="event__field-group  event__field-group--price">
 		<label class="event__label" for="event-price-1">
 		  <span class="visually-hidden">Price</span>
 		  &euro;
 		</label>
-		<input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
+		<input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${point.price}">
 	  </div>
 	  <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
 	  <button class="event__reset-btn" type="reset">Delete</button>
@@ -107,7 +108,7 @@ const createPointMenu = (point) => {
 	  <section class="event__section  event__section--offers">
 		<h3 class="event__section-title  event__section-title--offers">Offers</h3>
     <div class="event_-available-offers">
-      ${createOfferTemplate(offers, type)}
+      ${createOfferTemplate(point.offers, point.type)}
     </div>
 	  </section>
 	  <section class="event__section  event__section--destination">
@@ -115,7 +116,7 @@ const createPointMenu = (point) => {
 		<p class="event__destination-description">${destination.description}</p>
     <div class="event__photos-container">
       <div class="event__photos-tape">
-        <img class="event__photo" src="${destination.photo}" alt="Event photo">
+        ${createPhotosTemplate(destination)}
       </div>
     </div>
 	  </section>

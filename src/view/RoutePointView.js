@@ -1,6 +1,7 @@
 import { getOfferName, getOfferPrice } from '../mocks/const.js';
 import { createElement } from '../render.js';
-//import dayjs from 'dayjs';
+import { fullDate, getTime, getWithoutTime, shortDate } from '../dateApi.js';
+import { getDestById } from '../mocks/mock.js';
 
 const createOfferTemplate = (offerIds) => offerIds.map((id) => `<li class="event__offer">
   <span class="event__offer-title">${getOfferName(id)}</span>
@@ -10,29 +11,29 @@ const createOfferTemplate = (offerIds) => offerIds.map((id) => `<li class="event
 
 
 const createPathPoint = (point) => {
-  const {type, destination, dateFrom, dateTo, price, offers} = point;
+  const destination = getDestById(point.destination);
   return `<li class="trip-events__item">
 	<div class="event">
-	  <time class="event__date" datetime="${dateFrom.format('YYYY-MM-DD')}">${dateFrom.format('MMM D')}</time>
+	  <time class="event__date" datetime="${getWithoutTime(point.dateFrom)}">${shortDate(point.dateFrom)}</time>
 	  <div class="event__type">
-		<img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
+		<img class="event__type-icon" width="42" height="42" src="img/icons/${point.type}.png" alt="Event type icon">
 	  </div>
-	  <h3 class="event__title">${type} ${destination.name}</h3>
+	  <h3 class="event__title">${point.type} ${destination.name}</h3>
 	  <div class="event__schedule">
 		<p class="event__time">
-		  <time class="event__start-time" datetime="${dateFrom.format('YYYY-MM-DDTHH:mm')}">${dateFrom.format('HH:mm')}</time>
+		  <time class="event__start-time" datetime="${fullDate(point.dateFrom)}">${getTime(point.dateFrom)}</time>
 		  &mdash;
-		  <time class="event__end-time" datetime="${dateTo.format('YYYY-MM-DDTHH:mm')}">${dateTo.format('HH:mm')}</time>
+		  <time class="event__end-time" datetime="${fullDate(point.dateTo)}">${getTime(point.dateTo)}</time>
 		</p>
 		<p class="event__duration"> D H
 	  M</p>
 	  </div>
 	  <p class="event__price">
-		&euro;&nbsp;<span class="event__price-value">${price}</span>
+		&euro;&nbsp;<span class="event__price-value">${point.price}</span>
 	  </p>
 	  <h4 class="visually-hidden">Offers:</h4>
     <ul class="event__selected-offers">
-    ${createOfferTemplate(offers)}
+    ${createOfferTemplate(point.offers)}
     </ul>
 	  <button class="event__favorite-btn event__favorite-btn--active" type="button">
 		<span class="visually-hidden">Add to favorite</span>

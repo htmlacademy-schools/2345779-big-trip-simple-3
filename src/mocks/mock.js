@@ -1,27 +1,38 @@
 import { getRandomInt } from '../util';
 import {TYPES, CITIES, getArrayFromType, DESCRIPTION} from './const.js';
-import dayjs from 'dayjs';
+import { getDates } from '../dateApi';
 
+let i = 0;
+let pointId = 0;
+const destinations = [];
 
-const getDates = () => {
-  const start = getRandomInt(1, 15);
-  const end = getRandomInt(16, 31);
-  return [dayjs().add(start, 'd'), dayjs().add(end, 'd')];
+const createDestination = () => {
+  const res = {
+    id: ++i,
+    name: CITIES[getRandomInt(0, CITIES.length - 1)],
+    description: DESCRIPTION[getRandomInt(0, DESCRIPTION.length - 1)],
+    pictures: [
+      {
+        src: `http://picsum.photos/248/152?r=${getRandomInt(1, 100)}`,
+        description: 'placeholder'
+      }
+    ]
+  };
+  destinations.push(res);
+  return res;
 };
 
-const createDestination = () => ({
-  name: CITIES[getRandomInt(0, CITIES.length - 1)],
-  photo: `http://picsum.photos/248/152?r=${getRandomInt(1, 100)}`,
-  description: DESCRIPTION[getRandomInt(0, DESCRIPTION.length - 1)]
-});
+export const getDestById = (id) => destinations.find((dest) => dest.id === id);
 
 export const generatePoint = () => {
   const pointType = TYPES[getRandomInt(1, TYPES.length - 1)];
   const dates = getDates();
   const offersForType = getArrayFromType(pointType);
+  const dest = createDestination();
   return {
+    id: ++pointId,
     type: pointType,
-    destination: createDestination(),
+    destination: dest.id,
     dateFrom: dates[0],
     dateTo: dates[1],
     price: getRandomInt(1, 1500),
