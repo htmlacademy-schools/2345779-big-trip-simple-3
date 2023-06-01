@@ -16,15 +16,15 @@ export default class Presenter {
 
   init() {
 
-    this.routePoints = this.tripModel.getPoints();
+    this.routePoints = this.tripModel.points;
 
     render(new SortingView(), this.container);
     render(this.pointsList, this.container);
-    render(new RedactionView(this.routePoints[0]), this.pointsList.getElement());
-    render(new CreationFormView(this.routePoints[0]), this.pointsList.getElement());
+    render(new RedactionView(this.routePoints[0]), this.pointsList.element);
+    render(new CreationFormView(this.routePoints[0]), this.pointsList.element);
 
     for (let i = 1; i < 5; i++) {
-      render(new PointView(this.routePoints[i]), this.pointsList.getElement());
+      render(new PointView(this.routePoints[i]), this.pointsList.element);
     }
 
   }
