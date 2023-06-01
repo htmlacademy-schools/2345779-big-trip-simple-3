@@ -7,7 +7,7 @@ import {render} from '../render.js';
 
 export default class Presenter {
 
-  pointsList = new TripEventsView();
+  #pointsList = new TripEventsView();
 
   constructor(container, tripModel) {
     this.container = container;
@@ -19,12 +19,12 @@ export default class Presenter {
     this.routePoints = this.tripModel.points;
 
     render(new SortingView(), this.container);
-    render(this.pointsList, this.container);
-    render(new RedactionView(this.routePoints[0]), this.pointsList.element);
-    render(new CreationFormView(this.routePoints[0]), this.pointsList.element);
+    render(this.#pointsList, this.container);
+    render(new RedactionView(this.routePoints[0]), this.#pointsList.element);
+    render(new CreationFormView(this.routePoints[0]), this.#pointsList.element);
 
     for (let i = 1; i < 5; i++) {
-      render(new PointView(this.routePoints[i]), this.pointsList.element);
+      render(new PointView(this.routePoints[i]), this.#pointsList.element);
     }
 
   }
