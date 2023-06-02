@@ -30,7 +30,6 @@ export default class Presenter {
     const pointComponent = new PointView(point);
     const editPointComponent = new RedactionView(point);
 
-
     const replacePointWithForm = () => {
       this.#pointsList.element.replaceChild(editPointComponent.element, pointComponent.element);
     };
@@ -40,7 +39,7 @@ export default class Presenter {
     };
 
     const closeFormOnEscape = (evt) => {
-      if(evt.key === 'Escape') {
+      if(evt.keyCode === 27) {
         evt.preventDefault();
         replaceFormWithPoint();
         document.removeEventListener('keydown', closeFormOnEscape());
@@ -49,18 +48,18 @@ export default class Presenter {
 
     pointComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
       replacePointWithForm();
-      document.addEventListener('keydown', closeFormOnEscape());
+      document.addEventListener('keydown', closeFormOnEscape);
     });
 
     editPointComponent.element.querySelector('.event__save-btn').addEventListener('submit', (evt) => {
       evt.preventDefault();
       replaceFormWithPoint();
-      document.removeEventListener('keydown', closeFormOnEscape());
+      document.removeEventListener('keydown', closeFormOnEscape);
     });
 
     editPointComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
       replaceFormWithPoint();
-      document.removeEventListener('keydown', closeFormOnEscape());
+      document.removeEventListener('keydown', closeFormOnEscape);
     });
 
     render(pointComponent, this.#pointsList.element);
