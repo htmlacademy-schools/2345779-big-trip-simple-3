@@ -2,32 +2,28 @@ import PointView from '../view/RoutePointView.js';
 import RedactionView from '../view/RedactionFormView.js';
 import SortingView from '../view/SortView.js';
 import TripEventsView from '../view/EventListView.js';
-import {render} from '../framework/render.js';
+import {render, replace} from '../framework/render.js';
 import EmptyListView from '../view/EmptyListView.js';
 
 export default class Presenter {
 
-  #pointsList = new TripEventsView();
+  #pointsListComponent = new TripEventsView();
+  #sortingComponent = new SortingView();
+  #emptyListComponent = new EmptyListView();
+  #container = null;
+  #tripModel = null;
+  #pointsList = [];
 
   constructor(container, tripModel) {
-    this.container = container;
-    this.tripModel = tripModel;
+    this.#container = container;
+    this.#tripModel = tripModel;
   }
 
   init() {
 
-    this.routePoints = this.tripModel.points;
+    this.#pointsList = this.#tripModel.points;
 
-
-    if (this.routePoints.length === 0) {
-      render(new EmptyListView(), this.container);
-    } else {
-      render(new SortingView(), this.container);
-      render(this.#pointsList, this.container);
-      for (let i = 0; i < this.routePoints.length; i++) {
-        this.#renderPoint(this.routePoints[i]);
-      }
-    }
+    this.#renderPage();
   }
 
   #renderPoint(point) {
@@ -35,11 +31,11 @@ export default class Presenter {
     const editPointComponent = new RedactionView(point);
 
     const replacePointWithForm = () => {
-      this.#pointsList.element.replaceChild(editPointComponent.element, pointComponent.element);
+      replace(editPointComponent.element, pointComponent.element);
     };
 
     const replaceFormWithPoint = () => {
-      this.#pointsList.element.replaceChild(pointComponent.element, editPointComponent.element);
+      replace(pointComponent.element, editPointComponent.element);
     };
 
     const closeFormOnEscape = (evt) => {
@@ -65,7 +61,28 @@ export default class Presenter {
       document.removeEventListener('keydown', closeFormOnEscape);
     });
 
-    render(pointComponent, this.#pointsList.element);
+    render(pointComponent, this.#pointsListComponent.element);
+  }
+
+  #renderEmptyList() {
+    render(new this.#emptyListComponent, this.#container);
+  }
+
+  #renderSort() {
+    render(this.#sortingComponent, this.#container);
+  }
+
+  #renderPage() {
+    this.#renderSort();
+    render(this.#pointsListComponent, this.#container);
+    if(this.#pointsList.length === 0) {
+      this.#renderEmptyList();
+    } else {
+      for (let i = 0; i < this.#pointsList.length; i++) {
+        this.#renderPoint(this.#pointsList[i]);
+      }
+    }
+
   }
 
 }
