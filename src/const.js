@@ -29,6 +29,3 @@ export const UpdateType = {
   MAJOR: 'MAJOR',
   INIT: 'INIT',
 };
-
-
-
