@@ -1,6 +1,7 @@
 import {remove, render, RenderPosition} from '../framework/render.js';
 import RedactionView from '../view/RedactionFormView.js';
-import {UserAction, UpdateType, defaultPoint} from '../const.js';
+import {UserAction, UpdateType} from '../const.js';
+import { defaultPoint } from '../utils/util.js';
 
 export default class NewPointPresenter {
   #pointListContainer = null;

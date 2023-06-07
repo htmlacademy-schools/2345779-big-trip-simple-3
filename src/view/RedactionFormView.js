@@ -1,7 +1,7 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import { POINT_TYPES, defaultPoint } from '../const.js';
+import { POINT_TYPES } from '../const.js';
 import { compareDates,
   getFormattedDate,
   getIdFromTag,
@@ -9,7 +9,8 @@ import { compareDates,
   validateNumber,
   getListElementId,
   getListElementsNamesList,
-  getAvailableOffers
+  getAvailableOffers,
+  defaultPoint
 } from '../utils/util.js';
 
 const createPointIconTemplate = (id, type, isDisabled) => (`

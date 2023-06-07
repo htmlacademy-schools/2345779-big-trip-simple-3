@@ -78,3 +78,13 @@ export const sortPointsByDay = (pa, pb) => dayjs(pa.date_from).toDate() - dayjs(
 
 export const sortPointsByPrice = (pa, pb) => pb.base_price - pa.base_price;
 
+export const defaultPoint = () => Object.assign({}, {
+  'id': 0,
+  'type': 'taxi',
+  'base_price': 0,
+  'date_from': getFormattedDate(),
+  'date_to': getFormattedDate(),
+  'destination': 1,
+  'offers': [],
+});
+
