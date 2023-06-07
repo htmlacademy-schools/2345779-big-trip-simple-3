@@ -27,3 +27,13 @@ export const UpdateType = {
   INIT: 'INIT',
 };
 
+export const defaultPoint = () => Object.assign({}, {
+  'id': 0,
+  'type': 'taxi',
+  'base_price': 0,
+  'date_from': getFormattedDate(),
+  'date_to': getFormattedDate(),
+  'destination': 1,
+  'offers': [],
+});
+
